@@ -11,7 +11,8 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
  
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages={"com.control","com.service","com.model","com.repositories"})
+@ComponentScan(basePackages={"com.control","com.service","com.model","com.repositories",
+		"com.utils"})
 public class ApplicationContextConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

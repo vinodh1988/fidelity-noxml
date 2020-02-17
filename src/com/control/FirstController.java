@@ -3,6 +3,10 @@ package com.control;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -11,11 +15,22 @@ import org.springframework.web.servlet.ModelAndView;
 import com.config.IDException;
 import com.model.Person;
 import com.service.PersonService;
+import com.utils.PersonValidator;
 
 @Controller
 public class FirstController {
 @Autowired
    PersonService pservice;
+
+@Autowired
+    PersonValidator validator;
+
+@InitBinder
+protected void initBinder(WebDataBinder binder) {
+   binder.addValidators(validator);
+}
+
+
 	 @RequestMapping("/first")
 	 public String home()
 	 {
@@ -31,8 +46,12 @@ public class FirstController {
 	 }
 	 
 	 @RequestMapping(value="/store",method=RequestMethod.POST)
-	 public String storePerson(@ModelAttribute("person") Person person,ModelMap map) {
+	 public String storePerson
+	 (@ModelAttribute("person")@Validated Person person,BindingResult result,
+			 ModelMap map) {
 		 try {
+			if(result.hasErrors())
+				return "people";
 			pservice.addPerson(person); 
 			return "redirect:people.asp";
 		 }
